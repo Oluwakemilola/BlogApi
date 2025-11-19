@@ -5,6 +5,7 @@ import {JWT_SECRET} from "../config/env.js";
 //This middleaware checks if the the user is authenticated
 export const protect = async (req, res, next) => {
     try {
+        console.log('Authorization Header:', req.headers.authorization);
         const authHeader = req.headers.authorization;
         if(!authHeader || !authHeader.toLowerCase().startsWith('bearer')) {
             return res.status(401).json({

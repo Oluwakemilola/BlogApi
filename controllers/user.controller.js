@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import Auth from "../models/auth.model.js";
+import User from "../models/user.model.js";
 import {JWT_SECRET, JWT_EXPIRES_IN} from "../config/env.js";
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt";
@@ -17,7 +17,7 @@ export const signup = async (req, res, next) => {
             return res.status(400).json({message: "All fields are required"})
         }
          // To Check for existing User
-        const existingUser = await Auth.findOne({email}).session(session);
+        const existingUser = await User.findOne({email}).session(session);
         if(existingUser) {
             return res.status(400).json({message: "User already Exist"})
         }
@@ -27,7 +27,7 @@ export const signup = async (req, res, next) => {
         const hashPassword = await bcrypt.hash(password, salt)
 
         // To create New User
-        const newUser = await Auth.create([{firstname, lastname, email, username, phonenumber, gender, password:hashPassword, role: 'user'}], {session})
+        const newUser = await User.create([{firstname, lastname, email, username, phonenumber, gender, password:hashPassword, role: 'user'}], {session})
         await session.commitTransaction();
         session.endSession()
         return res.status(201).json({message: "user created successfully",
@@ -61,8 +61,8 @@ export const signin = async (req, res, next) => {
             return res.status(400).json({message: "All fields are required"})
         }
 
-        const User = await Auth.findOne({username})
-        if(!User) {
+        const user = await User.findOne({username})
+        if(!user) {
             return res.status(400).json({message:"Username not found"})
         }
 

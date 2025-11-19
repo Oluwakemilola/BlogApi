@@ -20,8 +20,8 @@ export const postBlog = async (req, res, next) => {
     const createBlog = await Blog.create([{author: req.user._id, title, body }], {
       session
     });
-  const blogWithAuthor = await Blog.findById(createBlog[0]._id)
-  .populate('author', 'firstname username')
+    //to fetch with populate
+  const blogWithAuthor = await Blog.findById(createBlog[0]._id).populate('author', 'firstname username')
   .session(session);
     await session.commitTransaction();
     session.endSession();
