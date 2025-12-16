@@ -13,29 +13,27 @@ const userSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        required: [true, "Please enter your email"] ,
+        required: [true, "Please enter your email"],
         unique: true,
         trim: true,
-        match: [/\S+@\S+\S.\S+/, "Invalid Email"]
+        match: [/\S+@\S+\.\S+/, "Invalid Email"]
     },
     username: {
         type: String,
-        required:true,
+        required: true,
         trim: true,
         unique: true
     },
     phonenumber: {
-        type: String,
+        type: Number,
         required: true,
-        match: [/^\+?[1-9]\d{1,14}$/, "Invalid Phonenumber"],
-        unique:true
+        unique: true
     },
     gender: {
         type: String,
         required: true,
         enum: ["female", "male"]
     },
-    
     password: {
         type: String,
         required: true,
@@ -43,16 +41,12 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: [
-            'user',
-            'admin'
-        ],
-        default: 'user',
+        enum: ['user', 'admin'],
+        default: 'user'
     }
-},
-{
+}, {
     timestamps: true
-})
+});
 
-const User = mongoose.model("Auth", userSchema)
-export default User
+const User = mongoose.model("Auth", userSchema);
+export default User;
