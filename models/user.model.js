@@ -3,13 +3,13 @@ import mongoose from "mongoose";
 const userSchema = new mongoose.Schema({
     firstname: {
         type: String,
-        required: true,
+        // required: true,
         trim: true
     },
     lastname: {
         type: String,
         trim: true,
-        required: true,
+        // required: true,
     },
     email: {
         type: String,
@@ -20,18 +20,17 @@ const userSchema = new mongoose.Schema({
     },
     username: {
         type: String,
-        required: true,
         trim: true,
         unique: true
     },
     phonenumber: {
         type: Number,
-        required: true,
+        // required: true,
         unique: true
     },
     gender: {
         type: String,
-        required: true,
+        // required: true,
         enum: ["female", "male"]
     },
     password: {
@@ -48,5 +47,5 @@ const userSchema = new mongoose.Schema({
     timestamps: true
 });
 
-const User = mongoose.model("Auth", userSchema);
+const User = mongoose.model("User", userSchema);
 export default User;

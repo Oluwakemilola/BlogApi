@@ -5,9 +5,9 @@ const blogSchema = new mongoose.Schema(
     title: {
       type: String,
       required: [true, "Title is required"],
-      trim: true,
       minlength: [5, "Title must be at least 5 characters long"],
-      maxlength: [150, "Title cannot exceed 150 characters"]
+      maxlength: [150, "Title cannot exceed 150 characters"],
+      trim: true
     },
 
     slug: {
@@ -23,10 +23,10 @@ const blogSchema = new mongoose.Schema(
     },
 
     author: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       trim: true,
-      ref: "User",
-      required: true
+      required: true,
+      default: "Jet"
       
     },
 
@@ -106,7 +106,7 @@ blogSchema.pre("save", async function (next) {
 });
 // Excerpt (preview Text)
 blogSchema.virtual("excerpt").get(function () {
-  return this.content.length > 120
+  return this.content.length > 150
     ? this.content.substring(0, 100) + "..."
     : this.content;
 });

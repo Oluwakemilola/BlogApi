@@ -1,0 +1,154 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Blog API",
+    "version": "1.0.0",
+    "description": "API to manage users, blogs, comments, and likes Created by Oluwakemi"
+  },
+  "servers": [
+    {
+      "url": "/api",
+      "description": "Local server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "UserSignUp": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": { "type": "string", "format": "email" },
+          "password": { "type": "string" }
+        }
+      },
+      "UserSignIn": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": { "type": "string", "format": "email" },
+          "password": { "type": "string" }
+        }
+      },
+      "Blog": {
+        "type": "object",
+        "required": ["author", "title", "content", "category", "tags"],
+        "properties": {
+          "author": { "type": "string" },
+          "title": { "type": "string" },
+          "content": { "type": "string" },
+          "category": { 
+            "type": "string",
+            "enum": ["technology","health","lifestyle","education","entertainment","business","travel","faith","food","comedy","politics","sports","other"]
+          },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "published": { "type": "boolean" },
+          "image": { 
+            "type": "object",
+            "properties": {
+              "url": { "type": "string" },
+              "publicId": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/signup": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Register a new user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/UserSignUp" } }
+          }
+        },
+        "responses": {
+          "201": { "description": "User created successfully" },
+          "400": { "description": "Bad request / User already exists" }
+        }
+      }
+    },
+    "/signin": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Sign in user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/UserSignIn" } }
+          }
+        },
+        "responses": {
+          "200": { "description": "Login successful, returns JWT" },
+          "400": { "description": "Invalid credentials" }
+        }
+      }
+    },
+    "/create": {
+      "post": {
+        "tags": ["Blog"],
+        "summary": "Admin creates a blog",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": { "$ref": "#/components/schemas/Blog" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Blog created successfully" },
+          "400": { "description": "Missing required fields" }
+        }
+      }
+    },
+    "/blogs/category/{category}": {
+      "get": {
+        "tags": ["Blog"],
+        "summary": "Get blogs by category",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "Category name"
+          }
+        ],
+        "responses": {
+          "200": { "description": "Blogs retrieved successfully" },
+          "400": { "description": "Category not available" }
+        }
+      }
+    },
+    "/blogs/tags": {
+      "get": {
+        "tags": ["Blog"],
+        "summary": "Get blogs by tags",
+        "parameters": [
+          {
+            "name": "tags",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "Comma-separated tags"
+          }
+        ],
+        "responses": {
+          "200": { "description": "Blogs retrieved successfully" },
+          "400": { "description": "Tags are required" }
+        }
+      }
+    }
+  }
+}

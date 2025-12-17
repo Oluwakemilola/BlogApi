@@ -4,17 +4,17 @@ import uploadToCloudinary from "../utills/upload.js";
 // Admin-only: create a blog
 export const postBlog = async (req, res) => {
   try {
-    const { title, content, category, tags, published } = req.body;
+    const {author, title, content, category, tags, published } = req.body;
 
     // Required field validation
-    if (!title || !content || !category || !tags) {
+    if (!author || !title || !content || !category || !tags) {
       return res.status(400).json({
         message: "All required fields must be provided"
       });
     }
 
     const newPost = {
-      author: req.user._id, // Secure: use logged-in user as author
+      author,
       title,
       content,
       category,
@@ -36,12 +36,15 @@ export const postBlog = async (req, res) => {
     let savedPost = await Blog.create(newPost);
 
     // Populate author name, username
-    savedPost = await savedPost.populate("author", "firstname lastname username");
+    savedPost = await savedPost.populate("author");
+     console.log(req.file);
 
     return res.status(201).json({
       message: "Blog created successfully",
       data: savedPost
     });
+
+    
 
   } catch (error) {
     return res.status(500).json({
@@ -51,55 +54,55 @@ export const postBlog = async (req, res) => {
   }
 };
 
-// // // To Get Blogs
+// // // To Get Blogs by category
 
-// export const allBlog = async (req, res, next) =>{
-//   try {
-//     const Blogs = await Blog.find()
-//     return res.status(200).json({message:"All blogs fectched successfully",
-//       data: Blogs
-//     })
-//   } catch (error) {
-//   return res.status(500).json({
-//     message:"something went wrong",
-//     error: error.message
-//   })
-    
-//   }
-// }
+export const getBlogByCategory = async (req, res) => {
+  try {
+    const { category } = req.params;
+    if (!category) {
+      return res.status(400).json({ message: "Category not available" });
+    }
 
-// // TO Patch
+    const blogs = await Blog.find({ category: category.trim(), published: true })
+      .sort({ createdAt: -1 })
+      .populate('author');
 
-// export const editBlog = async (req, res) => {
-//   try {
-//     const {body, title} = req.body
-//     const edit = await Blog.findOneAndUpdate(body, title)
-//     return res.status(200).json({
-//       message:"blog successfully edited",
-//       data: edit
-//     })
-//   } catch (error) {
-//     return res.status(500).json({message:"something went wrong",
-//       error: error.message
-//     })
-//   }
-// }
+    res.status(200).json({
+      message: `Blogs in category: ${category}`,
+      data: blogs
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Something went wrong", error: error.message });
+  }
+};
 
+// to get by tags
+export const getBlogsByTags = async (req, res) => {
+  try {
+    const { tags } = req.query; // use query string, e.g., ?tags=backend,tech
+    if (!tags) {
+      return res.status(400).json({ message: "Tags are required" });
+    }
 
+    // Split comma-separated tags and trim whitespace
+    const tagsArray = tags.split(',').map(tag => tag.trim());
 
-// export const deleteBlog = async (req, res, next) => {
-//   try {
-//     const{id} = req.params;
+    // Find blogs that have at least one of the tags
+    const blogs = await Blog.find({ 
+      tags: { $in: tagsArray }, 
+      published: true 
+    })
+      .sort({ createdAt: -1 })
+      .populate('author', 'firstname lastname'); // optional: show author name
 
-//     const deletedBlog = await Blog.findOneAndDelete({author: req.user._id})
+    res.status(200).json({
+      message: `Blogs matching tags: ${tagsArray.join(', ')}`,
+      data: blogs
+    });
 
-//     if(!deletedBlog) {
-//       return res.status(400).json({message:"Blog not found"})
-//     }
-//     res.status(200).json({message:"Blog deleted Successfully"})
-//   } catch (error) {
-//     res.status(500).json({message:"something went wrong"})
-//   }
-// }
+  } catch (error) {
+    res.status(500).json({ message: "Something went wrong", error: error.message });
+  }
+};
 
 
