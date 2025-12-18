@@ -1,16 +1,7 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-    firstname: {
-        type: String,
-        // required: true,
-        trim: true
-    },
-    lastname: {
-        type: String,
-        trim: true,
-        // required: true,
-    },
+    
     email: {
         type: String,
         required: [true, "Please enter your email"],
@@ -18,21 +9,7 @@ const userSchema = new mongoose.Schema({
         trim: true,
         match: [/\S+@\S+\.\S+/, "Invalid Email"]
     },
-    username: {
-        type: String,
-        trim: true,
-        unique: true
-    },
-    phonenumber: {
-        type: Number,
-        // required: true,
-        unique: true
-    },
-    gender: {
-        type: String,
-        // required: true,
-        enum: ["female", "male"]
-    },
+    
     password: {
         type: String,
         required: true,

@@ -2,8 +2,8 @@ import { Router } from "express";
 import {postBlog, 
       getBlogByCategory, 
       getBlogsByTags ,
-       // editBlog, 
-//  deleteBlog 
+      updateBlog ,
+      deleteBlog 
 // 
 } from '../controllers/blog.controllers.js'
 
@@ -16,8 +16,8 @@ const blogRouter = Router();
 
 blogRouter.post('/create',protect, authorize("admin"), upload.single("image"), postBlog)
 blogRouter.get('/getblogbycategory/:category', getBlogByCategory)
-blogRouter.get("getblogsbytags", getBlogsByTags)
-// blogRouter.patch('/editblog/:id', editBlog)
-// // blogRouter.delete('/delete/:id', deleteBlog)
+blogRouter.get("/getblogsbytags", getBlogsByTags);
+blogRouter.patch('/updateblog/:id', protect, authorize("admin"), updateBlog)
+blogRouter.delete('/delete/:id',protect, authorize("admin"), deleteBlog)
 
 export default blogRouter;

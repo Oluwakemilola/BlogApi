@@ -58,23 +58,27 @@ export const postBlog = async (req, res) => {
 
 export const getBlogByCategory = async (req, res) => {
   try {
-    const { category } = req.params;
-    if (!category) {
-      return res.status(400).json({ message: "Category not available" });
-    }
+    const category = req.params.category.toLowerCase().trim();
 
-    const blogs = await Blog.find({ category: category.trim(), published: true })
+    const blogs = await Blog.find({
+      category,
+      published: true
+    })
       .sort({ createdAt: -1 })
-      .populate('author');
+      .populate("author");
 
     res.status(200).json({
       message: `Blogs in category: ${category}`,
       data: blogs
     });
   } catch (error) {
-    res.status(500).json({ message: "Something went wrong", error: error.message });
+    res.status(500).json({
+      message: "Something went wrong",
+      error: error.message
+    });
   }
 };
+
 
 // to get by tags
 export const getBlogsByTags = async (req, res) => {
@@ -102,6 +106,61 @@ export const getBlogsByTags = async (req, res) => {
 
   } catch (error) {
     res.status(500).json({ message: "Something went wrong", error: error.message });
+  }
+};
+
+//To Patch
+export const updateBlog = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const updatedBlog = await Blog.findByIdAndUpdate(
+      id,
+      req.body,
+      {
+        new: true,
+        runValidators: true
+      }
+    );
+
+    if (!updatedBlog) {
+      return res.status(404).json({ message: "Blog not found" });
+    }
+
+    res.status(200).json({
+      message: "Blog updated successfully",
+      data: updatedBlog
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to update blog",
+      error: error.message
+    });
+  }
+};
+
+
+//To delete Blogs
+export const deleteBlog = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deletedBlog = await Blog.findByIdAndDelete(id);
+
+    if (!deletedBlog) {
+      return res.status(404).json({ message: "Blog not found" });
+    }
+
+    res.status(200).json({
+      message: "Blog deleted successfully"
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to delete blog",
+      error: error.message
+    });
   }
 };
 
