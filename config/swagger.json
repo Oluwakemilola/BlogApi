@@ -3,12 +3,12 @@
   "info": {
     "title": "Blog API",
     "version": "1.0.0",
-    "description": "Production-ready Blog API with authentication, image uploads, comments, likes, and view tracking. Built by Oluwakemi."
+    "description": "Blog API with authentication, image uploads, comments, likes, and view tracking. Built by Oluwakemi."
   },
   "servers": [
     {
       "url": "https://blogapi-qg8e.onrender.com/api/v1",
-      "description": "Production (Render)"
+      "description": "Render"
     }
   ],
   "components": {

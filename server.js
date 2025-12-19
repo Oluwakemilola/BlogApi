@@ -22,7 +22,7 @@ swaggerSetup(app);
 //Router to signup and signin
 app.use('/api/v1', authRouter)
 //Router to post blog
-app.use('/api/v1', blogRouter)
+app.use('/api/v1/blogs', blogRouter)
 //Comment Router
 
 app.use('/api/v1', commentRouter)
