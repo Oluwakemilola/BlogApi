@@ -3,6 +3,7 @@ import {PORT} from './config/env.js'
 import { DB } from './database/mongodb.js';
 import blogRouter from './routes/blog.route.js';
 import authRouter from './routes/auth.route.js';
+import commentRouter from './routes/comment.route.js'
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import swaggerSetup from "./config/swagger.js";
@@ -22,6 +23,9 @@ swaggerSetup(app);
 app.use('/api/v1', authRouter)
 //Router to post blog
 app.use('/api/v1', blogRouter)
+//Comment Router
+
+app.use('/api/v1', commentRouter)
 
 app.listen(PORT, ()=> {
     DB()
