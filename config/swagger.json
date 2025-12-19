@@ -38,7 +38,7 @@
       },
       "BlogCreate": {
         "type": "object",
-        "required": ["title", "content", "category"],
+        "required": ["author","title", "content", "category"],
         "properties": {
           "title": { "type": "string", "example": "The Power of Backend Development" },
           "content": { "type": "string", "example": "Backend development powers authentication, databases, and APIs..." },
