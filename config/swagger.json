@@ -8,7 +8,7 @@
   "servers": [
     {
       "url": "https://blogapi-qg8e.onrender.com/api/v1",
-      "description": "Render"
+      "description": "Production (Render)"
     }
   ],
   "components": {
@@ -24,56 +24,134 @@
         "type": "object",
         "required": ["email", "password"],
         "properties": {
-          "email": { "type": "string", "format": "email" },
-          "password": { "type": "string", "minLength": 6 }
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "user@email.com"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 6,
+            "example": "password123"
+          }
         }
       },
       "UserSignIn": {
         "type": "object",
         "required": ["email", "password"],
         "properties": {
-          "email": { "type": "string", "format": "email" },
-          "password": { "type": "string" }
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string"
+          }
         }
       },
       "BlogCreate": {
         "type": "object",
-        "required": ["author","title", "content", "category"],
+        "required": ["author", "title", "content", "category"],
         "properties": {
-          "title": { "type": "string", "example": "The Power of Backend Development" },
-          "content": { "type": "string", "example": "Backend development powers authentication, databases, and APIs..." },
+          "author": {
+            "type": "string",
+            "example": "Oluwakemi"
+          },
+          "title": {
+            "type": "string",
+            "example": "The Power of Backend Development"
+          },
+          "content": {
+            "type": "string",
+            "example": "Backend development powers authentication, databases, and APIs."
+          },
           "category": {
             "type": "string",
-            "enum": ["technology","health","lifestyle","education","entertainment","business","travel","faith","food","comedy","politics","sports","other"]
+            "enum": [
+              "technology",
+              "health",
+              "lifestyle",
+              "education",
+              "entertainment",
+              "business",
+              "travel",
+              "faith",
+              "food",
+              "comedy",
+              "politics",
+              "sports",
+              "other"
+            ]
           },
           "tags": {
             "type": "array",
-            "items": { "type": "string" },
-            "example": ["backend","nodejs","api"]
+            "items": {
+              "type": "string"
+            },
+            "example": ["backend", "nodejs", "api"]
           },
-          "published": { "type": "boolean", "example": true },
-          "image": { "type": "string", "format": "binary", "description": "Blog image (drag and drop supported)" }
+          "published": {
+            "type": "boolean",
+            "example": true
+          },
+          "image": {
+            "type": "string",
+            "format": "binary"
+          }
         }
       },
       "BlogResponse": {
         "type": "object",
         "properties": {
-          "_id": { "type": "string" },
-          "title": { "type": "string" },
-          "content": { "type": "string" },
-          "category": { "type": "string" },
-          "tags": { "type": "array", "items": { "type": "string" } },
-          "published": { "type": "boolean" },
-          "image": { "type": "object", "properties": { "url": { "type": "string" }, "publicId": { "type": "string" } } },
-          "author": { "type": "string" },
-          "createdAt": { "type": "string", "format": "date-time" }
+          "_id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "published": {
+            "type": "boolean"
+          },
+          "image": {
+            "type": "object",
+            "properties": {
+              "url": {
+                "type": "string"
+              },
+              "publicId": {
+                "type": "string"
+              }
+            }
+          },
+          "author": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "CommentCreate": {
         "type": "object",
         "required": ["content"],
         "properties": {
-          "content": { "type": "string", "example": "This article was very helpful!" }
+          "content": {
+            "type": "string",
+            "example": "This article was very helpful!"
+          }
         }
       }
     }
@@ -83,16 +161,40 @@
       "post": {
         "tags": ["Auth"],
         "summary": "Register a new user",
-        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UserSignUp" } } } },
-        "responses": { "201": { "description": "User created successfully" }, "400": { "description": "User already exists or invalid input" } }
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserSignUp"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "User created successfully" },
+          "400": { "description": "User already exists or invalid input" }
+        }
       }
     },
     "/signin": {
       "post": {
         "tags": ["Auth"],
         "summary": "Login user",
-        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UserSignIn" } } } },
-        "responses": { "200": { "description": "Login successful" }, "401": { "description": "Invalid credentials" } }
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserSignIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Login successful" },
+          "401": { "description": "Invalid credentials" }
+        }
       }
     },
     "/blogs/create": {
@@ -100,24 +202,71 @@
         "tags": ["Blog"],
         "summary": "Create a new blog (Admin only)",
         "security": [{ "bearerAuth": [] }],
-        "requestBody": { "required": true, "content": { "multipart/form-data": { "schema": { "$ref": "#/components/schemas/BlogCreate" } } } },
-        "responses": { "201": { "description": "Blog created successfully", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/BlogResponse" } } } }, "400": { "description": "Validation error" }, "401": { "description": "Unauthorized" } }
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/BlogCreate"
+              },
+              "encoding": {
+                "image": {
+                  "contentType": "image/jpeg, image/png"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Blog created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlogResponse"
+                }
+              }
+            }
+          },
+          "400": { "description": "Validation error" },
+          "401": { "description": "Unauthorized" }
+        }
       }
     },
     "/blogs/getblogbycategory/{category}": {
       "get": {
         "tags": ["Blog"],
         "summary": "Get blogs by category",
-        "parameters": [{ "name": "category", "in": "path", "required": true, "schema": { "type": "string" } }],
-        "responses": { "200": { "description": "Blogs retrieved successfully" } }
+        "parameters": [
+          {
+            "name": "category",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Blogs retrieved successfully" }
+        }
       }
     },
     "/blogs/getblogsbytags": {
       "get": {
         "tags": ["Blog"],
         "summary": "Get blogs by tags",
-        "parameters": [{ "name": "tags", "in": "query", "required": true, "schema": { "type": "string" }, "description": "Comma-separated tags" }],
-        "responses": { "200": { "description": "Blogs retrieved successfully" }, "400": { "description": "Tags are required" } }
+        "parameters": [
+          {
+            "name": "tags",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "Comma-separated tags"
+          }
+        ],
+        "responses": {
+          "200": { "description": "Blogs retrieved successfully" },
+          "400": { "description": "Tags are required" }
+        }
       }
     },
     "/blogs/updateblog/{id}": {
@@ -125,9 +274,28 @@
         "tags": ["Blog"],
         "summary": "Update a blog (Admin only)",
         "security": [{ "bearerAuth": [] }],
-        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
-        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/BlogCreate" } } } },
-        "responses": { "200": { "description": "Blog updated successfully" }, "404": { "description": "Blog not found" } }
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BlogCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Blog updated successfully" },
+          "404": { "description": "Blog not found" }
+        }
       }
     },
     "/blogs/delete/{id}": {
@@ -135,8 +303,18 @@
         "tags": ["Blog"],
         "summary": "Delete a blog (Admin only)",
         "security": [{ "bearerAuth": [] }],
-        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
-        "responses": { "200": { "description": "Blog deleted successfully" }, "404": { "description": "Blog not found" } }
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Blog deleted successfully" },
+          "404": { "description": "Blog not found" }
+        }
       }
     },
     "/comments/{blogId}": {
@@ -144,15 +322,43 @@
         "tags": ["Comment"],
         "summary": "Post a comment",
         "security": [{ "bearerAuth": [] }],
-        "parameters": [{ "name": "blogId", "in": "path", "required": true, "schema": { "type": "string" } }],
-        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CommentCreate" } } } },
-        "responses": { "201": { "description": "Comment posted successfully" } }
+        "parameters": [
+          {
+            "name": "blogId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommentCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Comment posted successfully" }
+        }
       },
       "get": {
         "tags": ["Comment"],
         "summary": "Get all comments for a blog",
-        "parameters": [{ "name": "blogId", "in": "path", "required": true, "schema": { "type": "string" } }],
-        "responses": { "200": { "description": "Comments retrieved successfully" }, "404": { "description": "Blog not found" } }
+        "parameters": [
+          {
+            "name": "blogId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Comments retrieved successfully" },
+          "404": { "description": "Blog not found" }
+        }
       }
     }
   }
