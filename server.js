@@ -25,7 +25,7 @@ app.use('/api/v1', authRouter)
 app.use('/api/v1/blogs', blogRouter)
 //Comment Router
 
-app.use('/api/v1', commentRouter)
+app.use('/api/v1/comments', commentRouter)
 
 app.listen(PORT, ()=> {
     DB()
